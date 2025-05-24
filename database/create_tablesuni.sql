@@ -1,18 +1,18 @@
 USE universidade;
 
 -- criando tabelas e verificando suas existências
--- tabela alunos
+-- tabela cursos
 IF NOT EXISTS (
     SELECT *
-    FROM information_schema.tables 
-    WHERE table_schema = 'dbo' AND table_name = 'alunos'  
+    FROM information_schema.tables
+    WHERE table_schema = 'dbo' AND table_name = 'cursos'
 )
     BEGIN
-        CREATE TABLE dbo.alunos (
-            matricula INT IDENTITY(1,1) PRIMARY KEY,
-            nome VARCHAR(100) NOT NULL
+        CREATE TABLE dbo.cursos(
+            sigla VARCHAR(5) PRIMARY KEY,
+            nome VARCHAR(100) NOT NULL,
         )
-        PRINT 'tabela alunos criada com sucesso :)';
+        PRINT 'tabela cursos criada com sucesso :)';
     END
 
 -- tabela professores
@@ -29,18 +29,19 @@ IF NOT EXISTS (
         PRINT 'tabela professores criada com sucesso :)';
     END
 
--- tabela cursos
+-- tabela alunos
 IF NOT EXISTS (
     SELECT *
-    FROM information_schema.tables
-    WHERE table_schema = 'dbo' AND table_name = 'cursos'
+    FROM information_schema.tables 
+    WHERE table_schema = 'dbo' AND table_name = 'alunos'  
 )
     BEGIN
-        CREATE TABLE dbo.cursos(
-            sigla VARCHAR(5) PRIMARY KEY,
+        CREATE TABLE dbo.alunos (
+            matricula INT IDENTITY(1,1) PRIMARY KEY,
             nome VARCHAR(100) NOT NULL,
+            semestre_atual INT NOT NULL
         )
-        PRINT 'tabela cursos criada com sucesso :)';
+        PRINT 'tabela alunos criada com sucesso :)';
     END
 
 -- tabela disciplinas
@@ -60,21 +61,41 @@ IF NOT EXISTS (
         PRINT 'tabela disciplinas criada com sucesso :)';
     END
 
--- tabela grade curricular
+-- tabela grades curriculares
 IF NOT EXISTS (
     SELECT *
     FROM information_schema.tables
-    WHERE table_schema = 'dbo' AND table_name = 'grade_curricular'
+    WHERE table_schema = 'dbo' AND table_name = 'grades_curriculares'
 )
     BEGIN
-        CREATE TABLE dbo.grade_curricular(
+        CREATE TABLE dbo.grades_curriculares(
             sigla_curso VARCHAR(5) NOT NULL,
             sigla_disciplina VARCHAR(6) NOT NULL,
+            semestre INT NOT NULL,
             PRIMARY KEY (sigla_curso, sigla_disciplina),
             FOREIGN KEY (sigla_curso) REFERENCES cursos(sigla),
             FOREIGN KEY (sigla_disciplina) REFERENCES disciplinas(sigla)
         )
         PRINT 'tabela grade curricular criada com sucesso :)';
+    END
+
+-- tabela disciplinas ofertadas
+IF NOT EXISTS (
+    SELECT *
+    FROM information_schema.tables
+    WHERE table_schema = 'dbo' AND table_name = 'disciplinas_ofertadas'
+)
+    BEGIN
+        CREATE TABLE dbo.disciplinas_ofertadas(
+            sigla_disciplina VARCHAR(6) NOT NULL,
+            semestre VARCHAR(7) NOT NULL, --EX: 2025-1
+            status VARCHAR(10) CHECK(status IN ('Aberta', 'Fechada', 'Cancelada')) DEFAULT 'Aberta',
+            id_professor INT NOT NULL,
+            PRIMARY KEY (sigla_disciplina, semestre),
+            FOREIGN KEY (sigla_disciplina) REFERENCES disciplinas(sigla),
+            FOREIGN KEY (id_professor) REFERENCES professores(id)
+        )
+        PRINT 'tabela ofertas disciplinas criada com sucesso :)';
     END
 
 -- tabela matrículas
@@ -88,8 +109,7 @@ IF NOT EXISTS (
             sigla_curso VARCHAR(5) NOT NULL,
             sigla_disciplina VARCHAR(6) NOT NULL,
             matricula_aluno INT NOT NULL,
-            id_professor INT NOT NULL,
-            periodo_letivo INT NOT NULL,
+            periodo_letivo VARCHAR(7) NOT NULL, --EX: 2025-1
             nota1 DECIMAL(5,2) DEFAULT 0.00,
             nota2 DECIMAL(5,2) DEFAULT 0.00,
             nota3 DECIMAL(5,2) DEFAULT 0.00,
@@ -105,11 +125,10 @@ IF NOT EXISTS (
             nota_exame DECIMAL(5,2) DEFAULT 0.00,
             media_final DECIMAL (5,2) DEFAULT 0.00,
             resultado VARCHAR(10) CHECK(resultado IN ('Aguardando','Aprovado','Exame', 'Reprovado')) DEFAULT 'Aguardando',
-            PRIMARY KEY (sigla_curso, sigla_disciplina, matricula_aluno, id_professor, periodo_letivo),
+            PRIMARY KEY (sigla_curso, sigla_disciplina, matricula_aluno, periodo_letivo),
             FOREIGN KEY (sigla_curso) REFERENCES cursos(sigla),
             FOREIGN KEY (sigla_disciplina) REFERENCES disciplinas(sigla),
-            FOREIGN KEY (matricula_aluno) REFERENCES alunos(matricula),
-            FOREIGN KEY (id_professor) REFERENCES professores(id)
+            FOREIGN KEY (matricula_aluno) REFERENCES alunos(matricula)
         )
         PRINT 'tabela matriculas criada com sucesso :)';
     END
