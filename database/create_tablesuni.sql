@@ -9,7 +9,7 @@ IF NOT EXISTS (
 )
     BEGIN
         CREATE TABLE dbo.cursos(
-            sigla VARCHAR(5) PRIMARY KEY,
+            sigla VARCHAR(5) PRIMARY KEY NOT NULL,
             nome VARCHAR(100) NOT NULL,
         )
         PRINT 'tabela cursos criada com sucesso :)';
@@ -52,7 +52,7 @@ IF NOT EXISTS (
 )
     BEGIN
         CREATE TABLE dbo.disciplinas(
-            sigla VARCHAR(6) PRIMARY KEY,
+            sigla VARCHAR(6) PRIMARY KEY NOT NULL,
             nome VARCHAR(100) NOT NULL,
             carga_horaria INT NOT NULL,
             id_professor INT NOT NULL,
