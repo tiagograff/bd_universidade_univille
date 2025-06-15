@@ -122,7 +122,7 @@ IF NOT EXISTS (
             falta4 INT NOT NULL DEFAULT 0,
             total_faltas INT,
             percentual_faltas DECIMAL(5,2) DEFAULT 0.00,
-            nota_exame DECIMAL(5,2) DEFAULT 0.00,
+            nota_exame INT DEFAULT NULL,
             media_final DECIMAL (5,2) DEFAULT 0.00,
             resultado VARCHAR(10) CHECK(resultado IN ('Aguardando','Aprovado','Exame', 'Reprovado')) DEFAULT 'Aguardando',
             PRIMARY KEY (sigla_curso, sigla_disciplina, matricula_aluno, periodo_letivo),
