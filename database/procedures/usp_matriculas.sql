@@ -44,7 +44,7 @@ BEGIN
           END
      ELSE
           BEGIN 
-               PRINT 'erro ao realizar a matricula :('
+               PRINT 'erro ao realizar a matricula!'
           END 
 
 END
