@@ -2,7 +2,7 @@ USE universidade;
 
 GO
 
-CREATE PROCEDURE usp_exame
+CREATE OR ALTER PROCEDURE usp_exame
     @sigla_curso VARCHAR(5),
     @sigla_disciplina VARCHAR(6),
     @matricula_aluno INT,
@@ -39,6 +39,11 @@ BEGIN
                 WHEN nota_exame < 100.00 AND media_final < 50.00
                     THEN 'Reprovado'
             END
+        WHERE
+            sigla_curso = @sigla_curso
+            AND matricula_aluno = @matricula_aluno
+            AND sigla_disciplina = @sigla_disciplina
+            AND periodo_letivo = @periodo_letivo
 
     END
     ELSE

@@ -2,7 +2,7 @@ USE universidade
 
 GO
 
-CREATE PROCEDURE usp_boletim_aluno
+CREATE OR ALTER PROCEDURE usp_boletim_aluno
     @nome_aluno VARCHAR(100),
     @sigla_curso VARCHAR(5)
 AS
@@ -20,12 +20,13 @@ BEGIN
     ELSE
     BEGIN
         SELECT
-            d.nome as disciplina,
+            d.nome AS disciplina,
             m.periodo_letivo,
             CASE
                 WHEN m.resultado = 'Exame' THEN m.media_final
                 ELSE m.media
             END AS media_final,
+            m.percentual_frequencia AS frequencia,
             m.resultado AS status_disciplina
             FROM matriculas AS m
             INNER JOIN disciplinas AS d
