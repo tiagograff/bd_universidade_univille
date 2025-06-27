@@ -39,7 +39,7 @@ IF NOT EXISTS (
         CREATE TABLE dbo.alunos (
             matricula INT IDENTITY(1,1) PRIMARY KEY,
             nome VARCHAR(100) NOT NULL,
-            semestre_atual INT NOT NULL DEFAULT 1
+            semestre_atual INT DEFAULT 1
         )
         PRINT 'tabela alunos criada com sucesso :)';
     END
